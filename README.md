@@ -7,7 +7,7 @@ Just because I was borring.
 
 ```sh
 nasm -g -f elf64 write.asm
-ld write.o -o write
+ld write.asm
 gcc write.o printf.c
 ```
 
