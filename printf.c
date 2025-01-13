@@ -38,21 +38,23 @@ printf(const char *format, ...)
         int n = 0;
         int temp = 0;
         while (*c)
-                if (*c == '%')
-                {
-                        ++c;
-                        if (*c == 'd')
-                        {
-                                temp = putint(va_arg(args, int));
-                                c += temp;
-                                n += temp;
-                        }
-                }
-                else
+        {
+                if (*c != '%')
                 {
                         n += putchar(*c);
                         ++c;
+                        continue;
                 }
+
+                switch (*++c)
+                {
+                case 'd':
+                        temp = putint(va_arg(args, int));
+                        c += temp;
+                        n += temp;
+                        break;
+                }
+        }
         va_end(args);
         return n;
 }
