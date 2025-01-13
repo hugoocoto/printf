@@ -13,7 +13,7 @@ gcc write.o printf.c
 
 ## Usability
 
-It only support %d xd. (It is easy to expand thought)
+It only support %d, %c and %s xd. (It is easy to expand thought)
 
 ## Note
 

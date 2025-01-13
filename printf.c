@@ -2,13 +2,22 @@ extern int write(unsigned int fd, char *buf, unsigned long count);
 
 #include <stdarg.h>
 
-int
+static int
+len(char *str)
+{
+        int count = 0;
+        while (str[count])
+                ++count;
+        return count;
+}
+
+static int
 putchar(char c)
 {
         return write(1, &c, 1);
 }
 
-int
+static int
 putint(int d)
 {
         int rev_d = 0;
@@ -36,7 +45,9 @@ printf(const char *format, ...)
         va_start(args, format);
         char *c = (char *) format;
         int n = 0;
-        int temp = 0;
+        int size = 0;
+        char tempc;
+        char *temps;
         while (*c)
         {
                 if (*c != '%')
@@ -49,11 +60,24 @@ printf(const char *format, ...)
                 switch (*++c)
                 {
                 case 'd':
-                        temp = putint(va_arg(args, int));
-                        c += temp;
-                        n += temp;
+                        size = putint(va_arg(args, int));
                         break;
+
+                case 'c':
+                        size = putchar(va_arg(args, int));
+                        break;
+
+                case 's':
+                        temps = va_arg(args, char *);
+                        size = write(1, temps, len(temps)+1);
+                        break;
+
+                default:
+                        continue;
                 }
+
+                c += size;
+                n += size;
         }
         va_end(args);
         return n;
@@ -63,5 +87,7 @@ printf(const char *format, ...)
 int
 main()
 {
-        printf("%d + %d = %d", 1, 3, 1 + 3);
+        printf("INT %d + %d = %d\n", 1, 3, 1 + 3);
+        printf("STR %s\n", "this is a string");
+        printf("CHAR %c + %c = %c\n", '1', '3', '1' + '3');
 }
