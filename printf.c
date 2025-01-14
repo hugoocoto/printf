@@ -11,17 +11,17 @@ len(char *str)
         return count;
 }
 
-static int
-putchar(char c)
+static inline int
+putchar(int c)
 {
-        return write(1, &c, 1);
+        return write(1, (char *) &c, 1);
 }
 
-static int
-putint(int d)
+static inline int
+putlong(long d)
 {
-        int rev_d = 0;
-        int n = 0;
+        long rev_d = 0;
+        long n = 0;
         char c;
         while (d)
         {
@@ -37,6 +37,13 @@ putint(int d)
         }
         return n;
 }
+
+static inline int
+putstr(char *s)
+{
+        return write(1, s, len(s) + 1);
+}
+
 
 int
 printf(const char *format, ...)
@@ -60,7 +67,7 @@ printf(const char *format, ...)
                 switch (*++c)
                 {
                 case 'd':
-                        size = putint(va_arg(args, int));
+                        size = putlong((long) va_arg(args, int));
                         break;
 
                 case 'c':
@@ -68,8 +75,7 @@ printf(const char *format, ...)
                         break;
 
                 case 's':
-                        temps = va_arg(args, char *);
-                        size = write(1, temps, len(temps)+1);
+                        size = putstr(va_arg(args, char *));
                         break;
 
                 default:
